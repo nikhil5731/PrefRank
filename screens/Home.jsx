@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  ScrollView,
   TextInput,
 } from "react-native";
 import { FirebaseAuth } from "../firebaseConfig";
@@ -49,9 +50,9 @@ export default function Home() {
             </View>
             <View style={styles.inputGroup1}>
               <View style={styles.inputbox}>
-                <Text style={styles.inputText}>
-                  Quota<Text style={{ fontSize: 13 }}>(for JEE Main only)</Text>
-                  :
+                <Text style={styles.inputText} numberOfLines={1}>
+                  Quota
+                  <Text style={{ fontSize: 13 }}>(for JEE Main only)</Text>:
                 </Text>
                 <TextInput style={styles.input} placeholder="" />
               </View>
@@ -69,6 +70,7 @@ export default function Home() {
                 style={{
                   ...styles.inputText,
                   color: "white",
+                  fontSize: 15,
                   marginBottom: 0,
                 }}
               >
@@ -82,17 +84,12 @@ export default function Home() {
                   textAlign: "center",
                   marginTop: 10,
                 }}
+                onPress={() => FirebaseAuth.signOut()}
               >
                 SignOut
               </Text>
             </TouchableOpacity>
           </View>
-          {/* <TouchableOpacity
-            style={styles.btn}
-            onPress={() => FirebaseAuth.signOut()}
-          >
-            <Text style={{ color: "white" }}>Sign Out</Text>
-          </TouchableOpacity> */}
         </View>
       </ImageBackground>
     </View>
@@ -179,7 +176,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "white",
     width: "100%",
-    borderRadius: 5,
+    borderRadius: 10,
     height: 50,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 0 },

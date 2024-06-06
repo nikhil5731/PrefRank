@@ -8,10 +8,12 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { FirebaseAuth } from "../firebaseConfig";
+import { FirebaseAuth, FirebaseDB } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 
 export default function SignUp({ navigation }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,7 +29,18 @@ export default function SignUp({ navigation }) {
         email,
         password
       );
-      console.log(response);
+      if (response.user.uid) {
+        await addDoc(collection(FirebaseDB, "users"), {
+          name: name,
+          email: email,
+        })
+          .then(() => {
+            alert("Success!");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     } catch (error) {
       console.log(error.message);
       alert("Sign Up Failed! ", error);
@@ -40,11 +53,19 @@ export default function SignUp({ navigation }) {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
+        value={name}
+        placeholder="Name"
+        autoCapitalize="none"
+        onChange={(event) => setName(event.target.value)}
+      ></TextInput>
+      <TextInput
+        style={styles.input}
         value={email}
         placeholder="Email"
         autoCapitalize="none"
         onChange={(event) => setEmail(event.target.value)}
       ></TextInput>
+
       <TextInput
         style={styles.input}
         value={password}
