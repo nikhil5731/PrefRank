@@ -239,7 +239,7 @@ const mobileStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    backgroundColor: "white",
+    backgroundColor: "#fff",
   },
   leftView: {
     display: "none",
