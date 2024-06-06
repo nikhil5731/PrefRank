@@ -71,7 +71,7 @@ export default function SignUp({ navigation }) {
       ) : (
         <>
           <TouchableOpacity onPress={handleSignup} style={styles.btn}>
-            <Text style={styles.btn}>Create a account</Text>
+            <Text style={styles.btn}>Create an account</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.link}>Already have a account?</Text>
