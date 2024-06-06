@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Button,
   Text,
@@ -9,6 +9,7 @@ import {
   ImageBackground,
   ScrollView,
   TextInput,
+  Dimensions,
 } from "react-native";
 import { FirebaseAuth } from "../firebaseConfig";
 import HomeImage from "../assets/home2.png";
@@ -16,6 +17,8 @@ import Logo from "../assets/Logo.png";
 import useFonts from "../hooks/useFonts";
 
 export default function Home() {
+  const [isMobileView, setIsMobileView] = useState(false);
+
   useEffect(() => {
     const loadFonts = async () => {
       await useFonts();
@@ -23,17 +26,45 @@ export default function Home() {
 
     loadFonts();
   }, []);
+
+  useEffect(() => {
+    const handleScreenSizeChange = () => {
+      const { width } = Dimensions.get("window");
+      setIsMobileView(width < 1024); // Adjust the threshold as needed
+    };
+
+    Dimensions.addEventListener("change", handleScreenSizeChange);
+
+    // Initial check
+    handleScreenSizeChange();
+
+    return () => {
+      Dimensions.removeEventListener("change", handleScreenSizeChange);
+    };
+  }, []);
+
   return (
     <View style={styles.container}>
-      <ImageBackground source={HomeImage} style={styles.backgroundImage}>
-        <View style={styles.leftView}>
+      <ImageBackground
+        source={!isMobileView && HomeImage}
+        style={
+          isMobileView ? mobileStyles.backgroundImage : styles.backgroundImage
+        }
+      >
+        <View style={isMobileView ? mobileStyles.leftView : styles.leftView}>
           <Image source={Logo} style={styles.image} resizeMode="contain" />
         </View>
-        <View style={styles.rightView}>
-          <Text style={styles.titleText}>
+        <View style={isMobileView ? mobileStyles.rightView : styles.rightView}>
+          <Text
+            style={
+              isMobileView
+                ? { ...styles.titleText, fontSize: 35, width: "80%" }
+                : styles.titleText
+            }
+          >
             Fill the details and leave rest to us!
           </Text>
-          <View style={styles.formDiv}>
+          <View style={isMobileView ? mobileStyles.formDiv : styles.formDiv}>
             <View style={styles.inputGroup1}>
               <View style={styles.inputbox}>
                 <Text style={styles.inputText}>Name:</Text>
@@ -65,7 +96,9 @@ export default function Home() {
               <Text style={styles.inputText}>AIR:</Text>
               <TextInput style={styles.input} placeholder="" />
             </View>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity
+              style={isMobileView ? mobileStyles.btn : styles.btn}
+            >
               <Text
                 style={{
                   ...styles.inputText,
@@ -146,7 +179,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 40,
-    width: "60%",
+    width: "80%",
     textAlign: "center",
     color: "#262626",
     fontFamily: "Sanchez",
@@ -156,10 +189,10 @@ const styles = StyleSheet.create({
     textShadowRadius: 10,
   },
   formDiv: {
-    marginTop: 25,
+    marginTop: 10,
     backgroundColor: "#C4DAFF",
     width: "80%",
-    height: "80%",
+    height: "30rem",
     shadowColor: "#000",
     shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.4,
@@ -197,5 +230,66 @@ const styles = StyleSheet.create({
   inputbox: {
     flex: 1,
     flexDirection: "column",
+  },
+});
+
+const mobileStyles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    backgroundColor: "white",
+  },
+  leftView: {
+    display: "none",
+  },
+  rightView: {
+    flex: 1,
+    padding: 10,
+    alignItems: "center",
+  },
+  formDiv: {
+    marginTop: 25,
+    backgroundColor: "#C4DAFF",
+    width: "90%",
+    height: 500,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    borderRadius: 10,
+    padding: 20,
+  },
+  titleText: {
+    fontSize: 40,
+    width: "80%",
+    textAlign: "center",
+    color: "#262626",
+    fontFamily: "Sanchez",
+    lineHeight: 50,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 10,
+  },
+  btn: {
+    width: "100%",
+    height: "15%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#334C8A",
+    color: "white",
+    textAlign: "center",
+    verticalAlign: "middle",
+    fontSize: 30,
+    marginTop: 10,
+    borderRadius: 50,
+    borderWidth: 1,
+    margin: "auto",
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.7,
+    shadowRadius: 10,
   },
 });
